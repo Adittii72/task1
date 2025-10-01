@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Court Data Fetcher</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; }
+        .container { max-width: 700px; margin: auto; padding: 2em; border: 1px solid #ddd; border-radius: 8px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 8px; margin-bottom: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #0056b3; }
+        .results { margin-top: 2em; border-top: 1px solid #eee; padding-top: 1em; }
+        h2, h3 { color: #333; }
+        p { line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Search for a Case</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="case_type">Case Type:</label>
+            <input type="text" id="case_type" name="case_type" value="W.P.(C)" required>
+
+            <label for="case_number">Case Number:</label>
+            <input type="text" id="case_number" name="case_number" value="1234" required>
+
+            <label for="year">Year:</label>
+            <input type="text" id="year" name="year" value="2024" required>
+
+            <button type="submit">Search</button>
+        </form>
+
+        {% if results %}
+        <div class="results">
+            <h3>Results for: {{ query.case_type }} {{ query.case_number }}/{{ query.year }}</h3>
+            <p><strong>Parties:</strong> {{ results.parties_names }}</p>
+            <p><strong>Filing Date:</strong> {{ results.filing_date }}</p>
+            <p><strong>Next Hearing Date:</strong> {{ results.next_hearing_date }}</p>
+            <p><strong>Status:</strong> {{ results.case_status }}</p>
+            <p>
+                <strong>Judgment/Order:</strong> 
+                <a href="{{ results.judgment_url }}" target="_blank" download>Download PDF</a>
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
